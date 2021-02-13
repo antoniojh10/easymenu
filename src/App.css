@@ -35,7 +35,8 @@ button {
   color: aquamarine;
 }
 
-.register {
+.register,
+.login {
   display: flex;
   justify-content: center;
 }

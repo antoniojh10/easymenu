@@ -98,7 +98,7 @@ function RegisterComponent() {
 
           <button type="submit">Registrarse</button>
           <p>
-            ¿Ya tienes una cuaenta? <Link to="/signin">Inicia sesión</Link>
+            ¿Ya tienes una cuenta? <Link to="/signin">Inicia sesión</Link>
           </p>
         </form>
       </section>

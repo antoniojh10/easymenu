@@ -1,8 +1,9 @@
 import React from "react";
 import { RouteComponentProps } from "@reach/router";
+import LoginComponent from "@/components/LoginComponent";
 
 function Login(_props: RouteComponentProps) {
-  return <h1>Login</h1>;
+  return <LoginComponent />;
 }
 
 export default Login;
