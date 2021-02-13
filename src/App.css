@@ -1,18 +1,35 @@
 .App {
   text-align: center;
+  display: grid;
+  min-height: 100vh;
+  grid-template-columns: auto;
+  grid-template-rows: 10vh auto 5vh;
 }
 
 .App-header {
   background-color: #282c34;
-  min-height: 10vh;
   display: flex;
-  flex-direction: column;
+  padding: 0 10vh;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   font-size: calc(10px + 2vmin);
   color: white;
 }
 
 button {
   font-size: calc(10px + 2vmin);
+}
+
+.navMenu ul {
+  display: flex;
+}
+
+.navMenu a {
+  text-decoration: none;
+  margin-left: 1rem;
+  color: white;
+}
+
+.navMenu a:hover {
+  color: aquamarine;
 }
