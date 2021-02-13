@@ -1,8 +1,9 @@
 import React from "react";
 import { RouteComponentProps } from "@reach/router";
+import RegisterComponent from "@/components/RegisterComponent";
 
 function Register(_props: RouteComponentProps) {
-  return <h1>Register</h1>;
+  return <RegisterComponent />;
 }
 
 export default Register;
