@@ -2,8 +2,9 @@
   text-align: center;
   display: grid;
   min-height: 100vh;
-  grid-template-columns: auto;
+  grid-template-columns: 1fr;
   grid-template-rows: 10vh auto 5vh;
+  justify-content: center;
 }
 
 .App-header {
@@ -32,4 +33,30 @@ button {
 
 .navMenu a:hover {
   color: aquamarine;
+}
+
+.register {
+  display: flex;
+  justify-content: center;
+}
+
+form {
+  width: 300px;
+}
+
+.mb-1 {
+  margin-bottom: 1rem;
+}
+
+form label,
+form input,
+form span {
+  display: block;
+  text-align: left;
+}
+
+form span {
+  color: red;
+  font-size: 1rem;
+  line-height: 1rem;
 }
