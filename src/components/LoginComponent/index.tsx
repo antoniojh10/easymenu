@@ -66,6 +66,10 @@ function LoginComponent({ sendLoginData }: LoginComponentProps) {
 
           <button type="submit">Iniciar Sesión</button>
           <p>
+            ¿No recuerdas tu contraseña?{" "}
+            <Link to="/recover-password">Recuperala</Link>
+          </p>
+          <p>
             ¿No tienes una cuenta? <Link to="/signup">Regístrate</Link>
           </p>
         </form>

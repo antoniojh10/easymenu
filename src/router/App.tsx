@@ -4,6 +4,8 @@ import Layout from "@/components/Layout";
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
+import NotFound from "@/pages/NotFound";
+import PasswordRecovery from "@/pages/PasswordRecovery";
 import "@/App.css";
 
 function App() {
@@ -13,6 +15,8 @@ function App() {
         <Home path="/" />
         <Login path="/signin" />
         <Register path="/signup" />
+        <PasswordRecovery path="/recover-password" />
+        <NotFound default />
       </Router>
     </Layout>
   );
