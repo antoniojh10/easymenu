@@ -24,7 +24,7 @@ function AppRouter() {
           </>
         ) : (
           <>
-            <Redirect from="/dashboard" to="/sigin" noThrow />
+            <Redirect from="/dashboard" to="/signin" noThrow />
             <Login path="/signin" />
             <Register path="/signup" />
             <PasswordRecovery path="/recover-password" />
