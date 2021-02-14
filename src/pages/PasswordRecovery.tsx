@@ -1,8 +1,12 @@
 import React from "react";
 import { RouteComponentProps } from "@reach/router";
+import PasswordRecoveryComponent from "@/components/PasswordRecoveryComponent";
 
 function PasswordRecovery(_props: RouteComponentProps) {
-  return <h1>PasswordRecovery</h1>;
+  const sendEmail = (email: string) => {
+    console.log(email);
+  };
+  return <PasswordRecoveryComponent sendEmail={sendEmail} />;
 }
 
 export default PasswordRecovery;
