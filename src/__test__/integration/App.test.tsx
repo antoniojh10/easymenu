@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import App from "@/router/App";
+import App from "@/router/Router";
 
 describe("<App />", () => {
   beforeEach(() => {
