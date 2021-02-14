@@ -2,18 +2,23 @@ import React from "react";
 import { Link } from "@reach/router";
 import { useForm } from "react-hook-form";
 
-type LoginInput = {
+export type LoginInput = {
   email: string;
   password: string;
 };
 
-function LoginComponent() {
-  const { register, handleSubmit, getValues, errors } = useForm<LoginInput>({
+type LoginComponentProps = {
+  sendLoginData: (data: LoginInput) => void;
+};
+
+function LoginComponent({ sendLoginData }: LoginComponentProps) {
+  const { register, handleSubmit, errors, reset } = useForm<LoginInput>({
     mode: "onChange"
   });
 
-  const onSubmit = (data: LoginInput) => {
-    console.log(data);
+  const onSubmit = async (data: LoginInput) => {
+    await sendLoginData(data);
+    reset();
   };
 
   return (
