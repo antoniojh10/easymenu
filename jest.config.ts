@@ -8,6 +8,7 @@ export default {
   moduleFileExtensions: ["vue", "js", "json", "jsx", "ts", "tsx", "node"],
   // The alias set
   moduleNameMapper: {
+    "\\.css$": "<rootDir>/src/__mocks__/styleMock.ts",
     "@/(.*)$": "<rootDir>/src/$1"
   },
   preset: "ts-jest",
