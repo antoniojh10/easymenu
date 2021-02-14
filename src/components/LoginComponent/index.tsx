@@ -30,6 +30,8 @@ function LoginComponent({ sendLoginData }: LoginComponentProps) {
           <input
             name="email"
             className={!errors.email ? "mb-1" : undefined}
+            aria-label="email"
+            aria-invalid={errors.email ? "true" : "false"}
             ref={register({
               required: "Este campo es requerido",
               pattern: {
@@ -38,12 +40,14 @@ function LoginComponent({ sendLoginData }: LoginComponentProps) {
               }
             })}
           />
-          {errors.email && <span>{errors.email.message}</span>}
+          {errors.email && <span role="alert">{errors.email.message}</span>}
 
           <label>Contraseña:</label>
           <input
             name="password"
             className={!errors.password ? "mb-1" : undefined}
+            aria-label="password"
+            aria-invalid={errors.password ? "true" : "false"}
             ref={register({
               required: "Este campo es requerido",
               validate: {
@@ -56,7 +60,9 @@ function LoginComponent({ sendLoginData }: LoginComponentProps) {
               }
             })}
           />
-          {errors.password && <span>{errors.password.message}</span>}
+          {errors.password && (
+            <span role="alert">{errors.password.message}</span>
+          )}
 
           <button type="submit">Iniciar Sesión</button>
           <p>
