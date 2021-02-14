@@ -8,6 +8,7 @@ import Register from "@/pages/Register";
 import NotFound from "@/pages/NotFound";
 import Dashboard from "@/pages/Dashboard";
 import PasswordRecovery from "@/pages/PasswordRecovery";
+import ResetPassword from "@/pages/ResetPassword";
 
 function AppRouter() {
   const { user } = useAuth();
@@ -30,6 +31,7 @@ function AppRouter() {
             <PasswordRecovery path="/recover-password" />
           </>
         )}
+        <ResetPassword path="/reset-password" />
         <NotFound default />
       </Router>
     </Layout>
