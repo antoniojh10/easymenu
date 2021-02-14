@@ -5,6 +5,7 @@ import Home from "@/pages/Home";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import NotFound from "@/pages/NotFound";
+import Dashboard from "@/pages/Dashboard";
 import PasswordRecovery from "@/pages/PasswordRecovery";
 import "@/App.css";
 
@@ -16,6 +17,7 @@ function App() {
         <Login path="/signin" />
         <Register path="/signup" />
         <PasswordRecovery path="/recover-password" />
+        <Dashboard path="/dashboard" />
         <NotFound default />
       </Router>
     </Layout>
