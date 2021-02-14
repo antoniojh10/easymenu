@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "@reach/router";
 import { useForm } from "react-hook-form";
 
-type RegisterInput = {
+export type RegisterInput = {
   firstName: string;
   lastName: string;
   email: string;
@@ -10,13 +10,24 @@ type RegisterInput = {
   confirmPassword: string;
 };
 
-function RegisterComponent() {
-  const { register, handleSubmit, getValues, errors } = useForm<RegisterInput>({
+type RegisterComponentProps = {
+  sendRegisterData: (data: RegisterInput) => void;
+};
+
+function RegisterComponent({ sendRegisterData }: RegisterComponentProps) {
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    errors,
+    reset
+  } = useForm<RegisterInput>({
     mode: "onChange"
   });
 
-  const onSubmit = (data: RegisterInput) => {
-    console.log(data);
+  const onSubmit = async (data: RegisterInput) => {
+    await sendRegisterData(data);
+    reset();
   };
 
   return (
@@ -28,26 +39,36 @@ function RegisterComponent() {
           <input
             name="firstName"
             className={!errors.firstName ? "mb-1" : undefined}
+            aria-label="firstName"
+            aria-invalid={errors.firstName ? "true" : "false"}
             ref={register({
               required: "Este campo es requerido"
             })}
           />
-          {errors.firstName && <span>{errors.firstName.message}</span>}
+          {errors.firstName && (
+            <span role="alert">{errors.firstName.message}</span>
+          )}
 
           <label>Apellido:</label>
           <input
             name="lastName"
             className={!errors.lastName ? "mb-1" : undefined}
+            aria-label="lastName"
+            aria-invalid={errors.lastName ? "true" : "false"}
             ref={register({
               required: "Este campo es requerido"
             })}
           />
-          {errors.lastName && <span>{errors.lastName.message}</span>}
+          {errors.lastName && (
+            <span role="alert">{errors.lastName.message}</span>
+          )}
 
           <label>Correo:</label>
           <input
             name="email"
             className={!errors.email ? "mb-1" : undefined}
+            aria-label="email"
+            aria-invalid={errors.email ? "true" : "false"}
             ref={register({
               required: "Este campo es requerido",
               pattern: {
@@ -56,12 +77,14 @@ function RegisterComponent() {
               }
             })}
           />
-          {errors.email && <span>{errors.email.message}</span>}
+          {errors.email && <span role="alert">{errors.email.message}</span>}
 
           <label>Contraseña:</label>
           <input
             name="password"
             className={!errors.password ? "mb-1" : undefined}
+            aria-label="password"
+            aria-invalid={errors.password ? "true" : "false"}
             ref={register({
               required: "Este campo es requerido",
               validate: {
@@ -74,12 +97,16 @@ function RegisterComponent() {
               }
             })}
           />
-          {errors.password && <span>{errors.password.message}</span>}
+          {errors.password && (
+            <span role="alert">{errors.password.message}</span>
+          )}
 
           <label>Confirmar contraseña:</label>
           <input
             name="confirmPassword"
             className={!errors.confirmPassword ? "mb-1" : undefined}
+            aria-label="confirmPassword"
+            aria-invalid={errors.confirmPassword ? "true" : "false"}
             ref={register({
               required: "Este campo es requerido",
               validate: {
@@ -93,7 +120,7 @@ function RegisterComponent() {
             })}
           />
           {errors.confirmPassword && (
-            <span>{errors.confirmPassword.message}</span>
+            <span role="alert">{errors.confirmPassword.message}</span>
           )}
 
           <button type="submit">Registrarse</button>
