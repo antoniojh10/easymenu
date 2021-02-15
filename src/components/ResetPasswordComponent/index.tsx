@@ -7,11 +7,13 @@ export type ResetPasswordInput = {
 };
 
 type ResetPasswordComponentProps = {
-  resetPassword: (data: ResetPasswordInput) => void;
+  resetPassword: (data: ResetPasswordInput) => Promise<void>;
+  code: string | undefined;
 };
 
 function ResetPasswordComponent({
-  resetPassword
+  resetPassword,
+  code
 }: ResetPasswordComponentProps) {
   const {
     register,
@@ -33,7 +35,7 @@ function ResetPasswordComponent({
       <h1>Recuperar Contraseña</h1>
       <section className="login">
         <form onSubmit={handleSubmit(onSubmit)}>
-          <label>Contraseña:</label>
+          <label>Nueva contraseña:</label>
           <input
             name="password"
             className={!errors.password ? "mb-1" : undefined}
@@ -55,7 +57,7 @@ function ResetPasswordComponent({
             <span role="alert">{errors.password.message}</span>
           )}
 
-          <label>Confirmar contraseña:</label>
+          <label>Confirmar nueva contraseña:</label>
           <input
             name="confirmPassword"
             className={!errors.confirmPassword ? "mb-1" : undefined}
