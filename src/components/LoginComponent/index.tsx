@@ -8,10 +8,14 @@ export type LoginInput = {
 };
 
 type LoginComponentProps = {
-  sendLoginData: (data: LoginInput) => void;
+  sendLoginData: (data: LoginInput) => Promise<void>;
+  passwordChanged: true | undefined;
 };
 
-function LoginComponent({ sendLoginData }: LoginComponentProps) {
+function LoginComponent({
+  sendLoginData,
+  passwordChanged
+}: LoginComponentProps) {
   const { register, handleSubmit, errors, reset } = useForm<LoginInput>({
     mode: "onChange"
   });
@@ -26,6 +30,7 @@ function LoginComponent({ sendLoginData }: LoginComponentProps) {
       <h1>Login</h1>
       <section className="login">
         <form onSubmit={handleSubmit(onSubmit)}>
+          {passwordChanged && <p>Su contraseña ha cambiado correctamente</p>}
           <label>Correo:</label>
           <input
             name="email"

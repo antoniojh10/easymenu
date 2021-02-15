@@ -19,6 +19,7 @@ function AppRouter() {
         {user ? (
           <>
             <Redirect from="/signin" to="/dashboard" noThrow />
+            <Redirect from="/signin/true" to="/dashboard" noThrow />
             <Redirect from="/signup" to="/dashboard" noThrow />
             <Redirect from="/recover-password" to="/dashboard" noThrow />
             <Dashboard path="/dashboard" />
@@ -27,6 +28,7 @@ function AppRouter() {
           <>
             <Redirect from="/dashboard" to="/signin" noThrow />
             <Login path="/signin" />
+            <Login path="/signin/:passwordChanged" />
             <Register path="/signup" />
             <PasswordRecovery path="/recover-password" />
           </>
