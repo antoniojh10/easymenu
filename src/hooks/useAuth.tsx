@@ -26,6 +26,7 @@ export type Auth = {
   ) => Promise<firebase.User | undefined | null>;
   signout: () => Promise<void>;
   sendPasswordResetEmail: (email: string) => Promise<Boolean | undefined>;
+  verifyResetPasswordCode: (code: string) => Promise<string | undefined>;
   confirmPasswordReset: (
     code: string,
     password: string
@@ -119,6 +120,18 @@ function useProvideAuth() {
   };
 
   /**
+   * Función para verificar el código del parámetro del email para reiniciar la contraseña
+   * @param code
+   */
+  const verifyResetPasswordCode = async (code: string) => {
+    try {
+      return await firebase.auth().verifyPasswordResetCode(code);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  /**
    * Función para crear la nueva contraseña
    * @param code El código de confirmación enviado al correo del usuario
    * @param password The new Password
@@ -150,6 +163,7 @@ function useProvideAuth() {
     signup,
     signout,
     sendPasswordResetEmail,
+    verifyResetPasswordCode,
     confirmPasswordReset
   };
 }
