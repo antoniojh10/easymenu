@@ -113,7 +113,7 @@ function RegisterComponent({ sendRegisterData }: RegisterComponentProps) {
                 passwordsMustBeEquals: (value: string) => {
                   const { password }: RegisterInput = getValues();
                   return (
-                    value === password || "Las contraseñas deben coincidirs"
+                    value === password || "Las contraseñas deben coincidir"
                   );
                 }
               }
