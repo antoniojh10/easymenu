@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "@reach/router";
 import { useForm } from "react-hook-form";
+import ErrorMessage from "@/components/ErrorMessage";
 
 export type LoginInput = {
   email: string;
@@ -10,11 +11,13 @@ export type LoginInput = {
 type LoginComponentProps = {
   sendLoginData: (data: LoginInput) => Promise<void>;
   passwordChanged: true | undefined;
+  loginError: undefined | string;
 };
 
 function LoginComponent({
   sendLoginData,
-  passwordChanged
+  passwordChanged,
+  loginError
 }: LoginComponentProps) {
   const { register, handleSubmit, errors, reset } = useForm<LoginInput>({
     mode: "onChange"
@@ -31,6 +34,7 @@ function LoginComponent({
       <section className="login">
         <form onSubmit={handleSubmit(onSubmit)}>
           {passwordChanged && <p>Su contraseña ha cambiado correctamente</p>}
+          <ErrorMessage prefix="login" errorCode={loginError} />
           <label>Correo:</label>
           <input
             name="email"

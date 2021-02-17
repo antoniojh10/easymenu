@@ -4,33 +4,29 @@ import "firebase/analytics";
 import "firebase/auth";
 import "firebase/firestore";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyC-wlTqNkTqOxdJbYtLC6h09hquaHmfKUE",
-  authDomain: "react-login---typescript.firebaseapp.com",
-  projectId: "react-login---typescript",
-  storageBucket: "react-login---typescript.appspot.com",
-  messagingSenderId: "833609458712",
-  appId: "1:833609458712:web:2ebba9f1f9cabc5f710f6d",
-  measurementId: "G-F12NHK5WG4"
-};
-
-firebase.initializeApp(firebaseConfig);
-firebase.analytics();
+import { registerNewUser } from "@/api/firebase";
 
 export type Auth = {
   user: firebase.User | null;
-  signin: (email: string, password: string) => Promise<void>;
+  signin: (email: string, password: string) => Promise<undefined | Error>;
   signup: (
+    firstName: string,
+    lastName: string,
     email: string,
     password: string
-  ) => Promise<firebase.User | undefined | null>;
+  ) => Promise<Error | undefined>;
   signout: () => Promise<void>;
-  sendPasswordResetEmail: (email: string) => Promise<Boolean | undefined>;
+  sendPasswordResetEmail: (email: string) => Promise<undefined | Error>;
   verifyResetPasswordCode: (code: string) => Promise<string | undefined>;
   confirmPasswordReset: (
     code: string,
     password: string
   ) => Promise<Boolean | undefined>;
+};
+
+export type Error = {
+  code: string;
+  message: string;
 };
 
 const authContext = React.createContext({} as Auth);
@@ -73,6 +69,7 @@ function useProvideAuth() {
       setUser(response.user);
     } catch (error) {
       console.error(error);
+      return error as Error;
     }
   };
 
@@ -81,16 +78,29 @@ function useProvideAuth() {
    * @param email
    * @param password
    */
-  const signup = async (email: string, password: string) => {
+  const signup = async (
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string
+  ) => {
     try {
       const response = await firebase
         .auth()
         .createUserWithEmailAndPassword(email, password);
 
+      if (!response.user?.uid) throw new Error("Ha ocurrido un error");
+
+      await registerNewUser({
+        id: response.user?.uid,
+        firstName,
+        lastName,
+        email
+      });
       setUser(response.user);
-      return response.user;
     } catch (error) {
       console.error(error);
+      return error as Error;
     }
   };
 
@@ -113,9 +123,9 @@ function useProvideAuth() {
   const sendPasswordResetEmail = async (email: string) => {
     try {
       await firebase.auth().sendPasswordResetEmail(email);
-      return true;
     } catch (error) {
       console.error(error);
+      return error as Error;
     }
   };
 

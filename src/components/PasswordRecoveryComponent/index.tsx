@@ -1,17 +1,22 @@
 import React from "react";
 import { Link } from "@reach/router";
 import { useForm } from "react-hook-form";
+import ErrorMessage from "@/components/ErrorMessage";
 
 export type RecoverPasswordInput = {
   email: string;
 };
 
 type PasswordRecoveryComponentProps = {
-  sendEmail: (email: string) => void;
+  sendEmail: (email: string) => Promise<void>;
+  recoveryError: undefined | string;
+  showMessage: Boolean;
 };
 
 function PasswordRecoveryComponent({
-  sendEmail
+  sendEmail,
+  recoveryError,
+  showMessage
 }: PasswordRecoveryComponentProps) {
   const {
     register,
@@ -24,7 +29,6 @@ function PasswordRecoveryComponent({
 
   const onSubmit = async (data: RecoverPasswordInput) => {
     await sendEmail(data.email);
-    reset();
   };
 
   return (
@@ -32,6 +36,7 @@ function PasswordRecoveryComponent({
       <h1>Recuperar Contraseña</h1>
       <section className="login">
         <form onSubmit={handleSubmit(onSubmit)}>
+          <ErrorMessage prefix="recover-password" errorCode={recoveryError} />
           <label>Correo:</label>
           <input
             name="email"
@@ -49,6 +54,7 @@ function PasswordRecoveryComponent({
           {errors.email && <span role="alert">{errors.email.message}</span>}
 
           <button type="submit">Recuperar contraseña</button>
+          {showMessage && <p>El correo se ha enviado correctamente</p>}
           <p>
             ¿Recordaste la contraseña? <Link to="/signin">Inicia Sesión</Link>
           </p>

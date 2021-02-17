@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "@reach/router";
 import { useForm } from "react-hook-form";
+import ErrorMessage from "@/components/ErrorMessage";
 
 export type RegisterInput = {
   firstName: string;
@@ -12,22 +13,19 @@ export type RegisterInput = {
 
 type RegisterComponentProps = {
   sendRegisterData: (data: RegisterInput) => void;
+  registerError: undefined | string;
 };
 
-function RegisterComponent({ sendRegisterData }: RegisterComponentProps) {
-  const {
-    register,
-    handleSubmit,
-    getValues,
-    errors,
-    reset
-  } = useForm<RegisterInput>({
+function RegisterComponent({
+  sendRegisterData,
+  registerError
+}: RegisterComponentProps) {
+  const { register, handleSubmit, getValues, errors } = useForm<RegisterInput>({
     mode: "onChange"
   });
 
   const onSubmit = async (data: RegisterInput) => {
     await sendRegisterData(data);
-    reset();
   };
 
   return (
@@ -35,6 +33,7 @@ function RegisterComponent({ sendRegisterData }: RegisterComponentProps) {
       <h1>Register</h1>
       <section className="register">
         <form onSubmit={handleSubmit(onSubmit)}>
+          <ErrorMessage prefix="register" errorCode={registerError} />
           <label>Nombre:</label>
           <input
             name="firstName"
