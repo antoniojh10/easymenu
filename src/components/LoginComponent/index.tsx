@@ -19,13 +19,12 @@ function LoginComponent({
   passwordChanged,
   loginError
 }: LoginComponentProps) {
-  const { register, handleSubmit, errors, reset } = useForm<LoginInput>({
+  const { register, handleSubmit, errors } = useForm<LoginInput>({
     mode: "onChange"
   });
 
   const onSubmit = async (data: LoginInput) => {
     await sendLoginData(data);
-    reset();
   };
 
   return (
@@ -42,11 +41,11 @@ function LoginComponent({
             aria-label="email"
             aria-invalid={errors.email ? "true" : "false"}
             ref={register({
-              required: "Este campo es requerido",
-              pattern: {
+              required: "Este campo es requerido"
+              /* pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                 message: "Correo inválido"
-              }
+              } */
             })}
           />
           {errors.email && <span role="alert">{errors.email.message}</span>}

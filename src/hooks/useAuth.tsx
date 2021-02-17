@@ -4,12 +4,19 @@ import "firebase/analytics";
 import "firebase/auth";
 import "firebase/firestore";
 
-import { uniqueUserName, registerNewUser } from "@/api/firebase";
+import {
+  uniqueUserName,
+  registerNewUser,
+  loginWithUserName
+} from "@/api/firebase";
 
 export type Auth = {
   user: firebase.User | null;
-  signin: (email: string, password: string) => Promise<undefined | Error>;
   signup: (userData: RegisterUser) => Promise<Error | undefined>;
+  signin: (
+    emailOrUsername: string,
+    password: string
+  ) => Promise<undefined | Error>;
   signout: () => Promise<void>;
   sendPasswordResetEmail: (email: string) => Promise<undefined | Error>;
   verifyResetPasswordCode: (code: string) => Promise<string | undefined>;
@@ -60,16 +67,42 @@ function useProvideAuth() {
 
   /**
    * Función para iniciar sesión
-   * @param email
+   * @param emailOrUsername
    * @param password
    */
-  const signin = async (email: string, password: string) => {
+  const signin = async (emailOrUsername: string, password: string) => {
+    if (emailOrUsername.includes("@")) {
+      return signinWithEmailAndPassword(emailOrUsername, password);
+    } else {
+      return signinWithUsernameAndPassword(emailOrUsername, password);
+    }
+  };
+  const signinWithEmailAndPassword = async (
+    email: string,
+    password: string
+  ) => {
     try {
       const response = await firebase
         .auth()
         .signInWithEmailAndPassword(email, password);
 
       setUser(response.user);
+    } catch (error) {
+      console.error(error);
+      return error as Error;
+    }
+  };
+  const signinWithUsernameAndPassword = async (
+    username: string,
+    password: string
+  ) => {
+    try {
+      const response: string | Error = await loginWithUserName(username);
+      if (typeof response === "string") {
+        return signinWithEmailAndPassword(response, password);
+      } else {
+        throw response;
+      }
     } catch (error) {
       console.error(error);
       return error as Error;

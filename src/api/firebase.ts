@@ -54,3 +54,22 @@ export async function registerNewUser(userData: newUserInputs): Promise<void> {
     console.error(error);
   }
 }
+
+export async function loginWithUserName(
+  username: string
+): Promise<string | { code: string }> {
+  try {
+    return await usersCollection
+      .where("username", "==", username.toLowerCase())
+      .get()
+      .then((response) => {
+        if (response.size > 0) {
+          return response.docs[0].data().email;
+        } else {
+          return { code: "auth/user-not-found" };
+        }
+      });
+  } catch (error) {
+    return { code: "auth/something-went-wrong" };
+  }
+}

@@ -71,11 +71,18 @@ function RegisterComponent({
             aria-invalid={errors.username ? "true" : "false"}
             ref={register({
               required: "Este campo es requerido",
-              validate: (value: string) => {
-                return (
-                  !value.includes(" ") ||
-                  "El nombre de usuario no puede contener espacios."
-                );
+              validate: {
+                noWhitespaces: (value: string) => {
+                  return (
+                    !value.includes(" ") ||
+                    "El nombre de usuario no puede contener espacios"
+                  );
+                }
+              },
+              pattern: {
+                value: /[A-Za-z0-9._]/g,
+                message:
+                  "El nombre de usuario solo puede contener letras, números, '.' o '_'"
               }
             })}
           />
