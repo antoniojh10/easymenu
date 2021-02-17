@@ -22,30 +22,33 @@ type newUserInputs = {
   id: string;
   firstName: string;
   lastName: string;
+  username: string;
   email: string;
 };
 
-type FirebaseAPI = {
-  registerNewUser({
-    id,
-    firstName,
-    lastName,
-    email
-  }: newUserInputs): Promise<void>;
-};
-
-export async function registerNewUser({
-  id,
-  firstName,
-  lastName,
-  email
-}: newUserInputs): Promise<void> {
+export async function uniqueUserName(userName: string) {
   try {
-    await usersCollection.doc(id).set({
-      id,
-      firstName,
-      lastName,
-      email
+    return await usersCollection
+      .where("username", "==", userName.toLowerCase())
+      .get()
+      .then((response) => {
+        if (response.size > 0) {
+          return { code: "auth/username-already-in-use" };
+        } else {
+          return undefined;
+        }
+      });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function registerNewUser(userData: newUserInputs): Promise<void> {
+  try {
+    const username = userData.username.toLowerCase();
+    await usersCollection.doc(userData.id).set({
+      ...userData,
+      username
     });
   } catch (error) {
     console.error(error);

@@ -12,12 +12,13 @@ function Register(_props: RouteComponentProps) {
   );
   const register = async (data: RegisterInput) => {
     console.log(data);
-    const error = await auth.signup(
-      data.firstName,
-      data.lastName,
-      data.email,
-      data.password
-    );
+    const error = await auth.signup({
+      firstName: data.firstName,
+      lastName: data.lastName,
+      username: data.username,
+      email: data.email,
+      password: data.password
+    });
     if (error) setRegisterError(error.code);
   };
   return (

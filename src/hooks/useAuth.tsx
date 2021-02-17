@@ -4,17 +4,12 @@ import "firebase/analytics";
 import "firebase/auth";
 import "firebase/firestore";
 
-import { registerNewUser } from "@/api/firebase";
+import { uniqueUserName, registerNewUser } from "@/api/firebase";
 
 export type Auth = {
   user: firebase.User | null;
   signin: (email: string, password: string) => Promise<undefined | Error>;
-  signup: (
-    firstName: string,
-    lastName: string,
-    email: string,
-    password: string
-  ) => Promise<Error | undefined>;
+  signup: (userData: RegisterUser) => Promise<Error | undefined>;
   signout: () => Promise<void>;
   sendPasswordResetEmail: (email: string) => Promise<undefined | Error>;
   verifyResetPasswordCode: (code: string) => Promise<string | undefined>;
@@ -24,9 +19,17 @@ export type Auth = {
   ) => Promise<Boolean | undefined>;
 };
 
+type RegisterUser = {
+  firstName: string;
+  lastName: string;
+  username: string;
+  email: string;
+  password: string;
+};
+
 export type Error = {
   code: string;
-  message: string;
+  message?: string;
 };
 
 const authContext = React.createContext({} as Auth);
@@ -78,24 +81,24 @@ function useProvideAuth() {
    * @param email
    * @param password
    */
-  const signup = async (
-    firstName: string,
-    lastName: string,
-    email: string,
-    password: string
-  ) => {
+  const signup = async (userData: RegisterUser) => {
     try {
+      const usernameIsNotUnique: undefined | Error = await uniqueUserName(
+        userData.username.toLowerCase()
+      );
+      if (usernameIsNotUnique) throw usernameIsNotUnique;
       const response = await firebase
         .auth()
-        .createUserWithEmailAndPassword(email, password);
+        .createUserWithEmailAndPassword(userData.email, userData.password);
 
       if (!response.user?.uid) throw new Error("Ha ocurrido un error");
 
       await registerNewUser({
         id: response.user?.uid,
-        firstName,
-        lastName,
-        email
+        firstName: userData.firstName,
+        username: userData.username,
+        lastName: userData.lastName,
+        email: userData.email
       });
       setUser(response.user);
     } catch (error) {

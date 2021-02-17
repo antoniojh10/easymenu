@@ -6,13 +6,14 @@ import ErrorMessage from "@/components/ErrorMessage";
 export type RegisterInput = {
   firstName: string;
   lastName: string;
+  username: string;
   email: string;
   password: string;
   confirmPassword: string;
 };
 
 type RegisterComponentProps = {
-  sendRegisterData: (data: RegisterInput) => void;
+  sendRegisterData: (data: RegisterInput) => Promise<void>;
   registerError: undefined | string;
 };
 
@@ -60,6 +61,26 @@ function RegisterComponent({
           />
           {errors.lastName && (
             <span role="alert">{errors.lastName.message}</span>
+          )}
+
+          <label>Nombre de usuario:</label>
+          <input
+            name="username"
+            className={!errors.username ? "mb-1" : undefined}
+            aria-label="username"
+            aria-invalid={errors.username ? "true" : "false"}
+            ref={register({
+              required: "Este campo es requerido",
+              validate: (value: string) => {
+                return (
+                  !value.includes(" ") ||
+                  "El nombre de usuario no puede contener espacios."
+                );
+              }
+            })}
+          />
+          {errors.username && (
+            <span role="alert">{errors.username.message}</span>
           )}
 
           <label>Correo:</label>
