@@ -111,8 +111,7 @@ function useProvideAuth() {
 
   /**
    * Funcion para registro básico de usuarios
-   * @param email
-   * @param password
+   * @param userData firstName, lastName, username, email, password
    */
   const signup = async (userData: RegisterUser) => {
     try {
