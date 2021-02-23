@@ -73,3 +73,21 @@ export async function loginWithUserName(
     return { code: "auth/something-went-wrong" };
   }
 }
+
+export async function getUserData(email: string) {
+  try {
+    return await usersCollection
+      .where("email", "==", email)
+      .get()
+      .then((response) => {
+        if (response.size > 0) {
+          console.log(response.docs[0].data());
+          return response.docs[0].data() as newUserInputs;
+        } else {
+          throw { code: "auth/user-not-found" };
+        }
+      });
+  } catch (error) {
+    console.error(error);
+  }
+}

@@ -9,12 +9,11 @@ function Login(_props: RouteComponentProps) {
   const [loginError, setLoginError] = useState<undefined | string>(undefined);
 
   const login = async (data: LoginInput) => {
-    console.log(data);
     const error = await signin(data.email, data.password);
-    console.log(error);
     if (error) setLoginError(error.code);
     if (!error) navigate("/dashboard");
   };
+
   return (
     <LoginComponent
       sendLoginData={login}

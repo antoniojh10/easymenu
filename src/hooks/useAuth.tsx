@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useLoading, Loading } from "./useLoading";
 import firebase from "firebase/app";
 import "firebase/analytics";
 import "firebase/auth";
@@ -7,11 +8,12 @@ import "firebase/firestore";
 import {
   uniqueUserName,
   registerNewUser,
-  loginWithUserName
+  loginWithUserName,
+  getUserData
 } from "@/api/firebase";
 
 export type Auth = {
-  user: firebase.User | null;
+  user: UserLoged | null;
   signup: (userData: RegisterUser) => Promise<Error | undefined>;
   signin: (
     emailOrUsername: string,
@@ -32,6 +34,14 @@ type RegisterUser = {
   username: string;
   email: string;
   password: string;
+};
+
+type UserLoged = {
+  id?: string;
+  firstName?: string;
+  lastName?: string;
+  username?: string;
+  email?: string;
 };
 
 export type Error = {
@@ -63,7 +73,8 @@ export function useAuth(): Auth {
 }
 
 function useProvideAuth() {
-  const [user, setUser] = useState<firebase.User | null>(null);
+  const [user, setUser] = useState<UserLoged | null>(null);
+  const { loadingOn, loadingOff }: Loading = useLoading();
 
   /**
    * Función para iniciar sesión
@@ -86,7 +97,15 @@ function useProvideAuth() {
         .auth()
         .signInWithEmailAndPassword(email, password);
 
-      setUser(response.user);
+      let userInfo = undefined;
+
+      if (response.user?.email) {
+        userInfo = await getUserData(response.user?.email);
+      } else {
+        throw { code: "auth/user-not-found" };
+      }
+
+      setUser({ ...userInfo });
     } catch (error) {
       console.error(error);
       return error as Error;
@@ -125,14 +144,16 @@ function useProvideAuth() {
 
       if (!response.user?.uid) throw new Error("Ha ocurrido un error");
 
-      await registerNewUser({
+      const userBasic = {
         id: response.user?.uid,
         firstName: userData.firstName,
-        username: userData.username,
+        username: userData.username.toLowerCase(),
         lastName: userData.lastName,
         email: userData.email
-      });
-      setUser(response.user);
+      };
+
+      await registerNewUser(userBasic);
+      setUser({ ...userBasic });
     } catch (error) {
       console.error(error);
       return error as Error;
@@ -191,16 +212,22 @@ function useProvideAuth() {
   };
 
   useEffect(() => {
-    const unsubscribe = firebase.auth().onAuthStateChanged((user: any) => {
-      if (user) {
-        setUser(user);
-      } else {
-        setUser(null);
-      }
-    });
+    loadingOff();
+    const unsubscribe = firebase
+      .auth()
+      .onAuthStateChanged(async function (user: any) {
+        if (user) {
+          loadingOn();
+          const userData = await getUserData(user.email);
+          setUser({ ...userData });
+          loadingOff();
+        } else {
+          setUser(null);
+        }
+      });
 
     return () => unsubscribe();
-  });
+  }, [user?.email]);
 
   return {
     user,
